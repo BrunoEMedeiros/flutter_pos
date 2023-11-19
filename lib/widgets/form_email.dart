@@ -16,7 +16,7 @@ class _FormEmailState extends State<FormEmail> {
   Future<bool> sendEmail(String email) async {
     try {
       Map<String, dynamic> request = {'email': email};
-      final uri = Uri.parse("http://192.168.0.121:21035/auth/get-access-code");
+      final uri = Uri.parse("http://192.168.0.34:21035/auth/get-access-code");
       final response = await http.post(uri, body: request);
       if (response.statusCode == 201) {
         return Future.value(true);

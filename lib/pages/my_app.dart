@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:projeto/pages/home_page.dart';
-import 'package:projeto/pages/registry_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 class MyApp extends StatefulWidget {
   const MyApp({super.key});
@@ -36,7 +36,14 @@ class _MyAppState extends State<MyApp> {
     try {
       return MaterialApp(
           debugShowCheckedModeBanner: false,
-          title: 'Flutter Navigation Example',
+          localizationsDelegates: const [
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+          ],
+          supportedLocales: const [
+            Locale('pt', 'BR'), // HUEHUE
+          ],
           theme: ThemeData(
             primaryColor: const Color.fromRGBO(0, 119, 182, 1),
             primaryColorLight: const Color.fromRGBO(144, 224, 239, 1),

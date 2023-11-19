@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:projeto/widgets/form_new_trip.dart';
 
 class BottomNavBar extends StatefulWidget {
   const BottomNavBar({super.key});
@@ -9,6 +10,7 @@ class BottomNavBar extends StatefulWidget {
 
 class _BottomNavBarState extends State<BottomNavBar> {
   int currentIndex = 0;
+  // double heigthSheet = 300;
   @override
   Widget build(BuildContext context) {
     return BottomNavigationBar(
@@ -19,23 +21,16 @@ class _BottomNavBarState extends State<BottomNavBar> {
         onTap: (int newIndex) {
           setState(() {
             currentIndex = newIndex;
-
             if (currentIndex == 1) {
               showModalBottomSheet(
                   context: context,
                   builder: (BuildContext builder) {
-                    return Column(
-                      children: [
-                        const Text("Teste"),
-                        ElevatedButton(
-                            onPressed: () {
-                              Navigator.pop(context);
-                            },
-                            child: const Text(
-                              "clique",
-                            ))
-                      ],
-                    );
+                    return const SizedBox(
+                        height: 450,
+                        child: Padding(
+                          padding: EdgeInsets.fromLTRB(25, 25, 25, 25),
+                          child: FormNewTrip(),
+                        ));
                   });
             } else if (currentIndex == 2) {
               // Navigator.pop(context, MaterialPageRoute(builder: (context) {
