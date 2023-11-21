@@ -1,25 +1,14 @@
 import 'dart:convert';
 import 'package:projeto/model/Viagens.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ViagensRepository {
-  // static List<Viagem> minhasViagens = [
-  //   Viagem(1, DateTime.now(), DateTime.now(), "Ja fui!", DateTime.now(),
-  //       DateTime.now(), DateTime.now(), "Bebedouro-SP", 1),
-  //   Viagem(2, DateTime.now(), DateTime.now(), "Ja fui!", DateTime.now(),
-  //       DateTime.now(), DateTime.now(), "Barcelona", 1),
-  //   Viagem(3, DateTime.now(), DateTime.now(), "Quero ir", DateTime.now(),
-  //       DateTime.now(), DateTime.now(), "Roma", 1),
-  //   Viagem(4, DateTime.now(), DateTime.now(), "Quero ir", DateTime.now(),
-  //       DateTime.now(), DateTime.now(), "Cairo", 1),
-  // ];
-
   static Future<List<Viagem>> getViagens() async {
     final client = http.Client();
-    final token = {
-      'Authorization':
-          'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsImVtYWlsIjoiZWRpbmFsZG9wc2pAcHJvdG9uLm1lIiwiaWF0IjoxNjk5NTgwOTY1LCJleHAiOjE3MDIxNzI5NjV9.mmiHDQMkeK4a-TdU0QT4Xiliz1UY8J1yvr4WQVfuRiY'
-    };
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final auth = await prefs.getString('token');
+    final token = {'Authorization': 'Bearer $auth'};
     final uri = Uri.parse("http://192.168.0.34:21035/trips");
     final response = await client.get(uri, headers: Map.from(token));
 
@@ -30,6 +19,66 @@ class ViagensRepository {
       return Viagem.fromJsonToList(jsonDecode(response.body));
     } else {
       throw Exception('Erro ao get trips');
+    }
+  }
+
+  static Future<bool> newTrip(
+      String startDate, String endDate, String destination) async {
+    try {
+      final client = http.Client();
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
+      final auth = await prefs.getString('token');
+      Map<String, dynamic> request = {
+        'startDate': startDate,
+        'endDate': endDate,
+        'destination': destination
+      };
+      final token = {'Authorization': 'Bearer $auth'};
+      final uri = Uri.parse("http://192.168.0.34:21035/trips");
+      final response = await client.post(
+        uri,
+        headers: Map.from(token),
+        body: request,
+      );
+      if (response.statusCode == 201) {
+        return Future.value(true);
+      } else {
+        return Future.value(false);
+      }
+    } catch (e) {
+      print("Error to create trip: $e");
+      return Future.value(false);
+    }
+  }
+
+  static Future<bool> editTrip(int id, String startDate, String endDate,
+      String destination, String status) async {
+    try {
+      print([id, startDate, endDate, destination, status]);
+      final client = http.Client();
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
+      final auth = prefs.getString('token');
+      Map<String, dynamic> request = {
+        'startDate': startDate,
+        'endDate': endDate,
+        'destination': destination,
+        'status': status
+      };
+      final token = {'Authorization': 'Bearer $auth'};
+      final uri = Uri.parse("http://192.168.0.34:21035/trips/$id");
+      final response = await client.put(
+        uri,
+        headers: Map.from(token),
+        body: request,
+      );
+      if (response.statusCode == 201) {
+        return Future.value(true);
+      } else {
+        return Future.value(false);
+      }
+    } catch (e) {
+      print("Error to create trip: $e");
+      return Future.value(false);
     }
   }
 }

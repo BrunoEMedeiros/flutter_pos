@@ -99,7 +99,7 @@ class _FormEmailState extends State<FormEmail> {
               Visibility(
                   visible: error,
                   child: const Text(
-                    "Ops, ocorreu um erro ao verificar enviar seu email",
+                    "Ops, ocorreu um erro ao enviar para estre email",
                     style: TextStyle(
                       fontSize: 20,
                     ),

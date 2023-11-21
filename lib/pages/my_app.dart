@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:projeto/pages/home_page.dart';
+import 'package:projeto/pages/registry_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
@@ -55,10 +56,10 @@ class _MyAppState extends State<MyApp> {
               future: checkEmail(),
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
-                  return const HomePage();
-                  // return snapshot.data!
-                  //     ? const HomePage()
-                  //     : const RegistrationPage();
+                  // return const HomePage();
+                  return snapshot.data!
+                      ? const HomePage()
+                      : const RegistrationPage();
                 } else if (snapshot.hasError) {
                   // The async operation has failed.
                   return Text('Error: ${snapshot.error}');

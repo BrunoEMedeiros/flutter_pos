@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:projeto/repository/viagens_repository.dart';
 import 'package:intl/intl.dart';
 import 'package:projeto/widgets/bottom_nav_bar.dart';
+import 'package:projeto/widgets/form_trip.dart';
+import 'package:projeto/widgets/status_text.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -11,13 +14,28 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  String token = '';
+
   @override
   void initState() {
+    getToken();
     super.initState();
+  }
+
+  Future<void> getToken() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      token = prefs.getString('token')!;
+    });
+  }
+
+  Future<void> attLista() async {
+    setState(() {});
   }
 
   @override
   Widget build(BuildContext context) {
+    debugPrint('token: $token');
     try {
       return Scaffold(
           body: SingleChildScrollView(
@@ -43,63 +61,80 @@ class _HomePageState extends State<HomePage> {
                         if (snapshot.hasData) {
                           return Column(
                             children: snapshot.data!.map((viagem) {
-                              return ExpansionTile(
-                                // key: viagem.id,
-                                onExpansionChanged: (isExpanded) {
-                                  debugPrint(
-                                      "Expansion state changed to $isExpanded");
-                                },
-                                title: Text(
-                                  viagem.destination,
-                                  textAlign: TextAlign.center,
-                                  style: const TextStyle(fontSize: 20),
-                                ),
-                                children: [
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
+                              return InkWell(
+                                  onLongPress: () {
+                                    setState(() {
+                                      showModalBottomSheet(
+                                          context: context,
+                                          builder: (BuildContext builder) {
+                                            return SizedBox(
+                                                height: 450,
+                                                child: Padding(
+                                                  padding:
+                                                      const EdgeInsets.fromLTRB(
+                                                          25, 25, 25, 25),
+                                                  child: FormNewTrip(
+                                                    token: token,
+                                                    recarregar: attLista,
+                                                    viagem: viagem,
+                                                    edit: false,
+                                                  ),
+                                                ));
+                                          });
+                                    });
+                                  },
+                                  child: ExpansionTile(
+                                    title: Text(
+                                      viagem.destination,
+                                      textAlign: TextAlign.center,
+                                      style: const TextStyle(fontSize: 20),
+                                    ),
                                     children: [
-                                      SizedBox(
-                                        height: 30,
-                                        child: Text(
-                                            "Ida: ${DateFormat('dd-MM-yyyy').format(viagem.startDate)}"),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          SizedBox(
+                                            height: 30,
+                                            child: Text(
+                                                "Ida: ${DateFormat('dd/MM/yyyy').format(viagem.startDate)}"),
+                                          ),
+                                          const SizedBox(width: 30),
+                                          SizedBox(
+                                            height: 30,
+                                            child: Text(
+                                                "Volta: ${DateFormat('dd/MM/yyyy').format(viagem.endDate)}"),
+                                          ),
+                                        ],
                                       ),
-                                      const SizedBox(width: 30),
-                                      SizedBox(
-                                        height: 30,
-                                        child: Text(
-                                            "Volta: ${DateFormat('dd-MM-yyyy').format(viagem.endDate)}"),
-                                      ),
-                                    ],
-                                  ),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      SizedBox(
-                                        height: 30,
-                                        child: Text(viagem.status),
-                                      ),
-                                      const SizedBox(width: 30),
-                                      OutlinedButton(
-                                        onPressed: () {},
-                                        style: OutlinedButton.styleFrom(
-                                          side: BorderSide.none,
-                                        ),
-                                        child: const Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Text('Diario'),
-                                            SizedBox(
-                                              width: 10,
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          StatusText(status: viagem.status),
+                                          const SizedBox(width: 30),
+                                          OutlinedButton(
+                                            onPressed: () {},
+                                            style: OutlinedButton.styleFrom(
+                                              side: BorderSide.none,
                                             ),
-                                            Icon(Icons.arrow_forward),
-                                          ],
-                                        ),
+                                            child: const Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                Text('Diario'),
+                                                SizedBox(
+                                                  width: 10,
+                                                ),
+                                                Icon(Icons.arrow_forward),
+                                              ],
+                                            ),
+                                          )
+                                        ],
                                       )
                                     ],
-                                  )
-                                ],
-                              );
+                                  ));
                             }).toList(),
                           );
                         } else if (snapshot.hasError) {
@@ -114,7 +149,10 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
           ),
-          bottomNavigationBar: const BottomNavBar());
+          bottomNavigationBar: BottomNavBar(
+            token: token,
+            recarregar: attLista,
+          ));
     } catch (e) {
       return Column(
         children: [

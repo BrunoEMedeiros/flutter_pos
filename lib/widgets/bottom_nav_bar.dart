@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:projeto/widgets/form_new_trip.dart';
+import 'package:projeto/pages/registry_page.dart';
+import 'package:projeto/widgets/form_trip.dart';
 
 class BottomNavBar extends StatefulWidget {
-  const BottomNavBar({super.key});
+  final String token;
+  final Function recarregar;
+  const BottomNavBar(
+      {super.key, required this.token, required this.recarregar});
 
   @override
   State<BottomNavBar> createState() => _BottomNavBarState();
@@ -25,17 +29,22 @@ class _BottomNavBarState extends State<BottomNavBar> {
               showModalBottomSheet(
                   context: context,
                   builder: (BuildContext builder) {
-                    return const SizedBox(
+                    return SizedBox(
                         height: 450,
                         child: Padding(
-                          padding: EdgeInsets.fromLTRB(25, 25, 25, 25),
-                          child: FormNewTrip(),
+                          padding: const EdgeInsets.fromLTRB(25, 25, 25, 25),
+                          child: FormNewTrip(
+                            token: widget.token,
+                            recarregar: widget.recarregar,
+                            viagem: null,
+                            edit: false,
+                          ),
                         ));
                   });
             } else if (currentIndex == 2) {
-              // Navigator.pop(context, MaterialPageRoute(builder: (context) {
-              //   return const HomePage();
-              // }));
+              Navigator.push(context, MaterialPageRoute(builder: (context) {
+                return const RegistrationPage();
+              }));
             }
           });
         },
