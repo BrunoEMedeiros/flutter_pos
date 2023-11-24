@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:projeto/model/Viagens.dart';
+import 'package:projeto/repository/viagens_repository.dart';
 import 'package:projeto/widgets/buttom_forms.dart';
+import 'package:projeto/widgets/dropdown_buttom.dart';
 
 class FormNewTrip extends StatefulWidget {
   final String token;
@@ -26,8 +28,8 @@ class _FormNewTripState extends State<FormNewTrip> {
   late TextEditingController _textDestino;
   late TextEditingController _textDataIda;
   late TextEditingController _textDataVolta;
-  late String dropDownOption;
   Color prefixIconColor = Colors.blue;
+  String dropDownOption = 'CREATED';
 
   @override
   void initState() {
@@ -39,13 +41,17 @@ class _FormNewTripState extends State<FormNewTrip> {
           text: DateFormat("dd/MM/yyyy").format(widget.viagem!.startDate));
       _textDataVolta = TextEditingController(
           text: DateFormat("dd/MM/yyyy").format(widget.viagem!.endDate));
-      dropDownOption = widget.viagem!.status;
     } else {
       _textDestino = TextEditingController();
       _textDataIda = TextEditingController();
       _textDataVolta = TextEditingController();
-      dropDownOption = 'CREATED';
     }
+  }
+
+  void atualizaDropDownOption(String value) {
+    setState(() {
+      dropDownOption = value;
+    });
   }
 
   @override
@@ -154,73 +160,62 @@ class _FormNewTripState extends State<FormNewTrip> {
                     ]),
                 const SizedBox(height: 20),
                 widget.viagem != null
-                    ? DropdownButton<String>(
-                        isDense: true,
-                        padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
-                        iconSize: 30,
-                        itemHeight: 50,
-                        isExpanded: true,
-                        value: dropDownOption,
-                        onChanged: (String? value) {
-                          setState(() {
-                            dropDownOption = value!;
-                          });
-                        },
-                        items: const [
-                          DropdownMenuItem<String>(
-                            value: 'CREATED',
-                            child: Center(
-                                child: Text(
-                              "Agendado",
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                  fontSize: 20, fontWeight: FontWeight.bold),
-                            )),
-                          ),
-                          DropdownMenuItem<String>(
-                            value: 'INPROGRESS',
-                            child: Center(
-                                child: Text(
-                              "Viajando",
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                  fontSize: 20, fontWeight: FontWeight.bold),
-                            )),
-                          ),
-                          DropdownMenuItem<String>(
-                            value: 'FINISHED',
-                            child: Center(
-                                child: Text(
-                              "Ja fui",
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                  fontSize: 20, fontWeight: FontWeight.bold),
-                            )),
-                          ),
-                        ],
-                      )
+                    ? StatusDropDown(
+                        funcao: atualizaDropDownOption,
+                        initialValue: widget.viagem!.status)
                     : Container(),
-                widget.viagem == null
-                    ? ButtomForms(
-                        id: null,
-                        funcao: widget.recarregar,
-                        textDataIda: _textDataIda,
-                        formKey: _formKey,
-                        textDataVolta: _textDataVolta,
-                        textDestino: _textDestino,
-                        editMode: false,
-                        status: null,
-                      )
-                    : ButtomForms(
-                        id: widget.viagem!.id,
-                        funcao: widget.recarregar,
-                        textDataIda: _textDataIda,
-                        formKey: _formKey,
-                        textDataVolta: _textDataVolta,
-                        textDestino: _textDestino,
-                        editMode: true,
-                        status: widget.viagem!.status,
-                      )
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    widget.viagem == null
+                        ? ButtomForms(
+                            id: null,
+                            funcao: widget.recarregar,
+                            textDataIda: _textDataIda,
+                            formKey: _formKey,
+                            textDataVolta: _textDataVolta,
+                            textDestino: _textDestino,
+                            editMode: false,
+                            status: null,
+                          )
+                        : ButtomForms(
+                            id: widget.viagem!.id,
+                            funcao: widget.recarregar,
+                            textDataIda: _textDataIda,
+                            formKey: _formKey,
+                            textDataVolta: _textDataVolta,
+                            textDestino: _textDestino,
+                            editMode: true,
+                            status: dropDownOption,
+                          ),
+                    const SizedBox(
+                      width: 20,
+                    ),
+                    Visibility(
+                      visible: widget.edit,
+                      child: InkWell(
+                        onLongPress: () async {
+                          final response = await ViagensRepository.deleteTrip(
+                              widget.viagem!.id);
+                          if (response) {
+                            setState(() {
+                              widget.recarregar();
+                              prefixIconColor = Colors.blue;
+                              Navigator.pop(context);
+                            });
+                          }
+                        },
+                        child: ElevatedButton(
+                          onPressed: () {},
+                          child: const Icon(
+                            Icons.delete,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                )
               ],
             )));
   }

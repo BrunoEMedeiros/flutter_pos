@@ -9,7 +9,7 @@ class ViagensRepository {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final auth = await prefs.getString('token');
     final token = {'Authorization': 'Bearer $auth'};
-    final uri = Uri.parse("http://192.168.0.34:21035/trips");
+    final uri = Uri.parse("http://10.106.77.51:21035/trips");
     final response = await client.get(uri, headers: Map.from(token));
 
     if (response.statusCode == 200) {
@@ -34,7 +34,7 @@ class ViagensRepository {
         'destination': destination
       };
       final token = {'Authorization': 'Bearer $auth'};
-      final uri = Uri.parse("http://192.168.0.34:21035/trips");
+      final uri = Uri.parse("http://10.106.77.51:21035/trips");
       final response = await client.post(
         uri,
         headers: Map.from(token),
@@ -54,7 +54,7 @@ class ViagensRepository {
   static Future<bool> editTrip(int id, String startDate, String endDate,
       String destination, String status) async {
     try {
-      print([id, startDate, endDate, destination, status]);
+      print("Status: $status");
       final client = http.Client();
       final SharedPreferences prefs = await SharedPreferences.getInstance();
       final auth = prefs.getString('token');
@@ -65,19 +65,41 @@ class ViagensRepository {
         'status': status
       };
       final token = {'Authorization': 'Bearer $auth'};
-      final uri = Uri.parse("http://192.168.0.34:21035/trips/$id");
+      final uri = Uri.parse("http://10.106.77.51:21035/trips/$id");
       final response = await client.put(
         uri,
         headers: Map.from(token),
         body: request,
       );
-      if (response.statusCode == 201) {
+      if (response.statusCode == 200) {
         return Future.value(true);
       } else {
         return Future.value(false);
       }
     } catch (e) {
-      print("Error to create trip: $e");
+      print("Error to update trip: $e");
+      return Future.value(false);
+    }
+  }
+
+  static Future<bool> deleteTrip(int id) async {
+    try {
+      final client = http.Client();
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
+      final auth = prefs.getString('token');
+      final token = {'Authorization': 'Bearer $auth'};
+      final uri = Uri.parse("http://10.106.77.51:21035/trips/$id");
+      final response = await client.delete(
+        uri,
+        headers: Map.from(token),
+      );
+      if (response.statusCode == 200) {
+        return Future.value(true);
+      } else {
+        return Future.value(false);
+      }
+    } catch (e) {
+      print("Error to delete trip: $e");
       return Future.value(false);
     }
   }

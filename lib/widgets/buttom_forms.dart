@@ -61,7 +61,7 @@ class _ButtomFormsState extends State<ButtomForms> {
                 prefixIconColor = Colors.red;
               });
             }
-          } else if (widget.editMode) {
+          } else {
             final response = await ViagensRepository.editTrip(
                 widget.id!,
                 idaFormatada,

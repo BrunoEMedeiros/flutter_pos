@@ -30,7 +30,9 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<void> attLista() async {
-    setState(() {});
+    setState(() {
+      print("Lista atualizada");
+    });
   }
 
   @override
@@ -77,7 +79,7 @@ class _HomePageState extends State<HomePage> {
                                                     token: token,
                                                     recarregar: attLista,
                                                     viagem: viagem,
-                                                    edit: false,
+                                                    edit: true,
                                                   ),
                                                 ));
                                           });
