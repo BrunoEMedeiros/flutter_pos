@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:projeto/repository/viagens_repository.dart';
-import 'package:intl/intl.dart';
 import 'package:projeto/widgets/bottom_nav_bar.dart';
-import 'package:projeto/widgets/form_trip.dart';
-import 'package:projeto/widgets/status_text.dart';
+import 'package:projeto/widgets/cards_trip.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class HomePage extends StatefulWidget {
@@ -23,10 +21,14 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<void> getToken() async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    setState(() {
-      token = prefs.getString('token')!;
-    });
+    try {
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
+      setState(() {
+        token = prefs.getString('token')!;
+      });
+    } catch (e) {
+      print("Erro to get token on preferences: $e");
+    }
   }
 
   Future<void> attLista() async {
@@ -63,80 +65,10 @@ class _HomePageState extends State<HomePage> {
                         if (snapshot.hasData) {
                           return Column(
                             children: snapshot.data!.map((viagem) {
-                              return InkWell(
-                                  onLongPress: () {
-                                    setState(() {
-                                      showModalBottomSheet(
-                                          context: context,
-                                          builder: (BuildContext builder) {
-                                            return SizedBox(
-                                                height: 450,
-                                                child: Padding(
-                                                  padding:
-                                                      const EdgeInsets.fromLTRB(
-                                                          25, 25, 25, 25),
-                                                  child: FormNewTrip(
-                                                    token: token,
-                                                    recarregar: attLista,
-                                                    viagem: viagem,
-                                                    edit: true,
-                                                  ),
-                                                ));
-                                          });
-                                    });
-                                  },
-                                  child: ExpansionTile(
-                                    title: Text(
-                                      viagem.destination,
-                                      textAlign: TextAlign.center,
-                                      style: const TextStyle(fontSize: 20),
-                                    ),
-                                    children: [
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          SizedBox(
-                                            height: 30,
-                                            child: Text(
-                                                "Ida: ${DateFormat('dd/MM/yyyy').format(viagem.startDate)}"),
-                                          ),
-                                          const SizedBox(width: 30),
-                                          SizedBox(
-                                            height: 30,
-                                            child: Text(
-                                                "Volta: ${DateFormat('dd/MM/yyyy').format(viagem.endDate)}"),
-                                          ),
-                                        ],
-                                      ),
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          StatusText(status: viagem.status),
-                                          const SizedBox(width: 30),
-                                          OutlinedButton(
-                                            onPressed: () {},
-                                            style: OutlinedButton.styleFrom(
-                                              side: BorderSide.none,
-                                            ),
-                                            child: const Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
-                                              children: [
-                                                Text('Diario'),
-                                                SizedBox(
-                                                  width: 10,
-                                                ),
-                                                Icon(Icons.arrow_forward),
-                                              ],
-                                            ),
-                                          )
-                                        ],
-                                      )
-                                    ],
-                                  ));
+                              return CardTrips(
+                                  token: token,
+                                  recarregarTela: attLista,
+                                  viagem: viagem);
                             }).toList(),
                           );
                         } else if (snapshot.hasError) {
@@ -152,6 +84,7 @@ class _HomePageState extends State<HomePage> {
             ),
           ),
           bottomNavigationBar: BottomNavBar(
+            diaryMode: false,
             token: token,
             recarregar: attLista,
           ));

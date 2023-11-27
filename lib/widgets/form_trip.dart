@@ -3,8 +3,9 @@ import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:projeto/model/Viagens.dart';
 import 'package:projeto/repository/viagens_repository.dart';
-import 'package:projeto/widgets/buttom_forms.dart';
+import 'package:projeto/widgets/buttom_new_trip.dart';
 import 'package:projeto/widgets/dropdown_buttom.dart';
+import 'package:projeto/widgets/buttom_edit_trip.dart';
 
 class FormNewTrip extends StatefulWidget {
   final String token;
@@ -33,7 +34,6 @@ class _FormNewTripState extends State<FormNewTrip> {
 
   @override
   void initState() {
-    super.initState();
     // Definindo o valor inicial do controlador
     if (widget.viagem != null) {
       _textDestino = TextEditingController(text: widget.viagem!.destination);
@@ -46,6 +46,7 @@ class _FormNewTripState extends State<FormNewTrip> {
       _textDataIda = TextEditingController();
       _textDataVolta = TextEditingController();
     }
+    super.initState();
   }
 
   void atualizaDropDownOption(String value) {
@@ -56,45 +57,27 @@ class _FormNewTripState extends State<FormNewTrip> {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-        child: Form(
-            key: _formKey,
-            child: Column(
-              children: [
-                TextFormField(
-                  controller: _textDestino,
-                  style: const TextStyle(fontSize: 22),
-                  decoration: InputDecoration(
-                      border: const OutlineInputBorder(),
-                      labelText: "Digite o destino",
-                      prefixIcon: const Icon(Icons.airplane_ticket),
-                      prefixIconColor: prefixIconColor),
-                  keyboardType: TextInputType.emailAddress,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      setState(() {
-                        prefixIconColor = Colors.red;
-                      });
-                      return "Digite o destino";
-                    }
-                    if (prefixIconColor == Colors.red) {
-                      setState(() {
-                        prefixIconColor = Colors.blue;
-                      });
-                    }
-                    return null;
-                  },
-                ),
-                const SizedBox(height: 20),
-                TextFormField(
-                    controller: _textDataIda,
-                    keyboardType: TextInputType.none,
+    try {
+      return SingleChildScrollView(
+          child: Form(
+              key: _formKey,
+              child: Column(
+                children: [
+                  TextFormField(
+                    controller: _textDestino,
+                    style: const TextStyle(fontSize: 22),
+                    decoration: InputDecoration(
+                        border: const OutlineInputBorder(),
+                        labelText: "Digite o destino",
+                        prefixIcon: const Icon(Icons.airplane_ticket),
+                        prefixIconColor: prefixIconColor),
+                    keyboardType: TextInputType.emailAddress,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         setState(() {
                           prefixIconColor = Colors.red;
                         });
-                        return "Escolha uma data";
+                        return "Digite o destino";
                       }
                       if (prefixIconColor == Colors.red) {
                         setState(() {
@@ -103,121 +86,136 @@ class _FormNewTripState extends State<FormNewTrip> {
                       }
                       return null;
                     },
-                    style: const TextStyle(fontSize: 22),
-                    decoration: InputDecoration(
-                        border: const OutlineInputBorder(),
-                        labelText: 'Data da ida',
-                        focusColor: Colors.blue,
-                        prefixIconColor: prefixIconColor,
-                        prefixIcon: IconButton(
-                          icon: const Icon(Icons.calendar_today),
-                          onPressed: () async {
-                            await _selectDateIda();
-                          },
-                        )),
-                    onTap: () async {
-                      await _selectDateIda();
-                    },
-                    inputFormatters: [
-                      LengthLimitingTextInputFormatter(10),
-                    ]),
-                const SizedBox(height: 20),
-                TextFormField(
-                    controller: _textDataVolta,
-                    keyboardType: TextInputType.none,
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        setState(() {
-                          prefixIconColor = Colors.red;
-                        });
-                        return "Escolha uma data";
-                      }
+                  ),
+                  const SizedBox(height: 20),
+                  TextFormField(
+                      controller: _textDataIda,
+                      keyboardType: TextInputType.none,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          setState(() {
+                            prefixIconColor = Colors.red;
+                          });
+                          return "Escolha uma data";
+                        }
+                        if (prefixIconColor == Colors.red) {
+                          setState(() {
+                            prefixIconColor = Colors.blue;
+                          });
+                        }
+                        return null;
+                      },
+                      style: const TextStyle(fontSize: 22),
+                      decoration: InputDecoration(
+                          border: const OutlineInputBorder(),
+                          labelText: 'Data da ida',
+                          focusColor: Colors.blue,
+                          prefixIconColor: prefixIconColor,
+                          prefixIcon: IconButton(
+                            icon: const Icon(Icons.calendar_today),
+                            onPressed: () async {
+                              await _selectDateIda();
+                            },
+                          )),
+                      onTap: () async {
+                        await _selectDateIda();
+                      },
+                      inputFormatters: [
+                        LengthLimitingTextInputFormatter(10),
+                      ]),
+                  const SizedBox(height: 20),
+                  TextFormField(
+                      controller: _textDataVolta,
+                      keyboardType: TextInputType.none,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          setState(() {
+                            prefixIconColor = Colors.red;
+                          });
+                          return "Escolha uma data";
+                        }
 
-                      if (prefixIconColor == Colors.red) {
-                        setState(() {
-                          prefixIconColor = Colors.blue;
-                        });
-                      }
-                      return null;
-                    },
-                    style: const TextStyle(fontSize: 22),
-                    decoration: InputDecoration(
-                        border: const OutlineInputBorder(),
-                        labelText: 'Data da volta',
-                        focusColor: Colors.blue,
-                        prefixIconColor: prefixIconColor,
-                        prefixIcon: IconButton(
-                          icon: const Icon(Icons.calendar_today),
-                          onPressed: () async {
-                            await _selectDateVolta();
-                          },
-                        )),
-                    onTap: () async {
-                      await _selectDateVolta();
-                    },
-                    inputFormatters: [
-                      LengthLimitingTextInputFormatter(10),
-                    ]),
-                const SizedBox(height: 20),
-                widget.viagem != null
-                    ? StatusDropDown(
-                        funcao: atualizaDropDownOption,
-                        initialValue: widget.viagem!.status)
-                    : Container(),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    widget.viagem == null
-                        ? ButtomForms(
-                            id: null,
-                            funcao: widget.recarregar,
-                            textDataIda: _textDataIda,
-                            formKey: _formKey,
-                            textDataVolta: _textDataVolta,
-                            textDestino: _textDestino,
-                            editMode: false,
-                            status: null,
-                          )
-                        : ButtomForms(
-                            id: widget.viagem!.id,
-                            funcao: widget.recarregar,
-                            textDataIda: _textDataIda,
-                            formKey: _formKey,
-                            textDataVolta: _textDataVolta,
-                            textDestino: _textDestino,
-                            editMode: true,
-                            status: dropDownOption,
-                          ),
-                    const SizedBox(
-                      width: 20,
-                    ),
-                    Visibility(
-                      visible: widget.edit,
-                      child: InkWell(
-                        onLongPress: () async {
-                          final response = await ViagensRepository.deleteTrip(
-                              widget.viagem!.id);
-                          if (response) {
-                            setState(() {
-                              widget.recarregar();
-                              prefixIconColor = Colors.blue;
-                              Navigator.pop(context);
-                            });
-                          }
-                        },
+                        if (prefixIconColor == Colors.red) {
+                          setState(() {
+                            prefixIconColor = Colors.blue;
+                          });
+                        }
+                        return null;
+                      },
+                      style: const TextStyle(fontSize: 22),
+                      decoration: InputDecoration(
+                          border: const OutlineInputBorder(),
+                          labelText: 'Data da volta',
+                          focusColor: Colors.blue,
+                          prefixIconColor: prefixIconColor,
+                          prefixIcon: IconButton(
+                            icon: const Icon(Icons.calendar_today),
+                            onPressed: () async {
+                              await _selectDateVolta();
+                            },
+                          )),
+                      onTap: () async {
+                        await _selectDateVolta();
+                      },
+                      inputFormatters: [
+                        LengthLimitingTextInputFormatter(10),
+                      ]),
+                  const SizedBox(height: 20),
+                  widget.edit
+                      ? StatusDropDown(
+                          funcao: atualizaDropDownOption,
+                          initialValue: widget.viagem!.status)
+                      : Container(),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      !widget.edit
+                          ? ButtomForms(
+                              funcao: widget.recarregar,
+                              textDataIda: _textDataIda,
+                              formKey: _formKey,
+                              textDataVolta: _textDataVolta,
+                              textDestino: _textDestino,
+                            )
+                          : EditButtom(
+                              id: widget.viagem!.id,
+                              formKey: _formKey,
+                              funcao: widget.recarregar,
+                              destino: _textDestino,
+                              dataIda: _textDataIda,
+                              dataVolta: _textDataVolta,
+                              status: dropDownOption),
+                      const SizedBox(
+                        width: 20,
+                      ),
+                      Visibility(
+                        visible: widget.edit,
                         child: ElevatedButton(
                           onPressed: () {},
                           child: const Icon(
                             Icons.delete,
                             color: Colors.white,
                           ),
+                          onLongPress: () async {
+                            final response = await ViagensRepository.deleteTrip(
+                                widget.viagem!.id);
+                            if (response) {
+                              setState(() {
+                                widget.recarregar();
+                                prefixIconColor = Colors.blue;
+                                Navigator.pop(context);
+                              });
+                            }
+                          },
                         ),
                       ),
-                    ),
-                  ],
-                )
-              ],
-            )));
+                    ],
+                  )
+                ],
+              )));
+    } catch (e) {
+      return Text("Error to handle form: $e");
+    }
   }
 
   Future<void> _selectDateIda() async {

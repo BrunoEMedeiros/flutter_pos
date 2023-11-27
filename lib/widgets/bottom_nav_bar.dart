@@ -1,12 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:projeto/pages/registry_page.dart';
+import 'package:projeto/widgets/form_diary.dart';
 import 'package:projeto/widgets/form_trip.dart';
 
 class BottomNavBar extends StatefulWidget {
+  final int? tripId;
+  final bool diaryMode;
   final String token;
   final Function recarregar;
   const BottomNavBar(
-      {super.key, required this.token, required this.recarregar});
+      {super.key,
+      required this.token,
+      required this.recarregar,
+      required this.diaryMode,
+      this.tripId});
 
   @override
   State<BottomNavBar> createState() => _BottomNavBarState();
@@ -32,14 +39,20 @@ class _BottomNavBarState extends State<BottomNavBar> {
                     return SizedBox(
                         height: 450,
                         child: Padding(
-                          padding: const EdgeInsets.fromLTRB(25, 25, 25, 25),
-                          child: FormNewTrip(
-                            token: widget.token,
-                            recarregar: widget.recarregar,
-                            viagem: null,
-                            edit: false,
-                          ),
-                        ));
+                            padding: const EdgeInsets.fromLTRB(25, 25, 25, 25),
+                            child: widget.diaryMode == false
+                                ? FormNewTrip(
+                                    token: widget.token,
+                                    recarregar: widget.recarregar,
+                                    viagem: null,
+                                    edit: false,
+                                  )
+                                : FormNewDiary(
+                                    tripId: widget.tripId!,
+                                    token: widget.token,
+                                    recarregar: widget.recarregar,
+                                    diario: null,
+                                    edit: false)));
                   });
             } else if (currentIndex == 2) {
               Navigator.push(context, MaterialPageRoute(builder: (context) {
@@ -51,9 +64,8 @@ class _BottomNavBarState extends State<BottomNavBar> {
         items: const [
           BottomNavigationBarItem(label: "HOME", icon: Icon(Icons.home)),
           BottomNavigationBarItem(
-              label: "NOVA VIAGEM", icon: Icon(Icons.airplay_outlined)),
-          BottomNavigationBarItem(
-              label: "PERFIL", icon: Icon(Icons.account_circle))
+              label: "NOVA VIAGEM", icon: Icon(Icons.flight)),
+          BottomNavigationBarItem(label: "SAIR", icon: Icon(Icons.exit_to_app))
         ]);
   }
 }

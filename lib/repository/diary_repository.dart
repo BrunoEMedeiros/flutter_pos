@@ -1,40 +1,40 @@
 import 'dart:convert';
-import 'package:projeto/model/Viagens.dart';
 import 'package:http/http.dart' as http;
+import 'package:projeto/model/Diario.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class ViagensRepository {
-  static Future<List<Viagem>> getViagens() async {
+class DiarysRepository {
+  static Future<List<Diario>> getDiarys(int tripId) async {
     final client = http.Client();
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    final auth = await prefs.getString('token');
+    final auth = prefs.getString('token');
     final token = {'Authorization': 'Bearer $auth'};
-    final uri = Uri.parse("http://192.168.0.121:21035/trips");
+    final uri = Uri.parse("http://192.168.0.121:21035/diary/$tripId");
     final response = await client.get(uri, headers: Map.from(token));
 
     if (response.statusCode == 200) {
       // final teste = Viagem.fromJson(json.decode(response.body));
       // return Viagem.fromJson(jsonDecode(response.body) as Map<String, dynamic>);
       //print(Viagem.fromJsonToList(jsonDecode(response.body)));
-      return Viagem.fromJsonToList(jsonDecode(response.body));
+      return Diario.fromJsonToList(jsonDecode(response.body));
     } else {
-      throw Exception('Erro ao get trips');
+      throw Exception('Error to get diarys');
     }
   }
 
-  static Future<bool> newTrip(
-      String startDate, String endDate, String destination) async {
+  static Future<bool> newDiaryEntry(
+      int tripId, String date, String location, String description) async {
     try {
       final client = http.Client();
       final SharedPreferences prefs = await SharedPreferences.getInstance();
-      final auth = await prefs.getString('token');
+      final auth = prefs.getString('token');
       Map<String, dynamic> request = {
-        'startDate': startDate,
-        'endDate': endDate,
-        'destination': destination
+        'date': date,
+        'description': description,
+        'location': location
       };
       final token = {'Authorization': 'Bearer $auth'};
-      final uri = Uri.parse("http://192.168.0.121:21035/trips");
+      final uri = Uri.parse("http://192.168.0.121:21035/diary/$tripId");
       final response = await client.post(
         uri,
         headers: Map.from(token),
@@ -46,26 +46,24 @@ class ViagensRepository {
         return Future.value(false);
       }
     } catch (e) {
-      print("Error to create trip: $e");
+      print("Error to create diary entry: $e");
       return Future.value(false);
     }
   }
 
-  static Future<bool> editTrip(int id, String startDate, String endDate,
-      String destination, String status) async {
+  static Future<bool> editDiary(int id, int tripId, String date,
+      String location, String description) async {
     try {
-      print("Status: $status");
       final client = http.Client();
       final SharedPreferences prefs = await SharedPreferences.getInstance();
       final auth = prefs.getString('token');
       Map<String, dynamic> request = {
-        'startDate': startDate,
-        'endDate': endDate,
-        'destination': destination,
-        'status': status
+        'date': date,
+        'description': description,
+        'location': location
       };
       final token = {'Authorization': 'Bearer $auth'};
-      final uri = Uri.parse("http://192.168.0.121:21035/trips/$id");
+      final uri = Uri.parse("http://192.168.0.121:21035/diary/$tripId/$id");
       final response = await client.put(
         uri,
         headers: Map.from(token),
@@ -77,18 +75,18 @@ class ViagensRepository {
         return Future.value(false);
       }
     } catch (e) {
-      print("Error to update trip: $e");
+      print("Error to update diary: $e");
       return Future.value(false);
     }
   }
 
-  static Future<bool> deleteTrip(int id) async {
+  static Future<bool> deleteDiary(int id, int tripId) async {
     try {
       final client = http.Client();
       final SharedPreferences prefs = await SharedPreferences.getInstance();
       final auth = prefs.getString('token');
       final token = {'Authorization': 'Bearer $auth'};
-      final uri = Uri.parse("http://192.168.0.121:21035/trips/$id");
+      final uri = Uri.parse("http://192.168.0.121:21035/diary/$tripId/$id");
       final response = await client.delete(
         uri,
         headers: Map.from(token),
@@ -99,7 +97,7 @@ class ViagensRepository {
         return Future.value(false);
       }
     } catch (e) {
-      print("Error to delete trip: $e");
+      print("Error to delete diary: $e");
       return Future.value(false);
     }
   }
