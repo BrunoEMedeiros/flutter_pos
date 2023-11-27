@@ -24,16 +24,18 @@ class _CardTripsState extends State<CardTrips> {
   @override
   Widget build(BuildContext context) {
     try {
-      return InkWell(
+      return GestureDetector(
           onLongPress: () {
             setState(() {
               showModalBottomSheet(
                   context: context,
+                  isScrollControlled: true,
                   builder: (BuildContext builder) {
-                    return SizedBox(
-                        height: 450,
+                    return SingleChildScrollView(
+                        physics: const BouncingScrollPhysics(),
                         child: Padding(
-                          padding: const EdgeInsets.fromLTRB(25, 25, 25, 25),
+                          padding: EdgeInsets.only(
+                              bottom: MediaQuery.of(context).viewInsets.bottom),
                           child: FormNewTrip(
                             token: widget.token,
                             recarregar: widget.recarregarTela,

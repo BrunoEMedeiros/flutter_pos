@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:projeto/pages/home_page.dart';
 import 'package:projeto/pages/registry_page.dart';
 import 'package:projeto/widgets/form_diary.dart';
 import 'package:projeto/widgets/form_trip.dart';
@@ -32,27 +33,32 @@ class _BottomNavBarState extends State<BottomNavBar> {
         onTap: (int newIndex) {
           setState(() {
             currentIndex = newIndex;
+            if (currentIndex == 0) {
+              Navigator.push(context, MaterialPageRoute(builder: (context) {
+                return const HomePage();
+              }));
+            }
             if (currentIndex == 1) {
               showModalBottomSheet(
                   context: context,
+                  isScrollControlled: true,
                   builder: (BuildContext builder) {
-                    return SizedBox(
-                        height: 450,
-                        child: Padding(
-                            padding: const EdgeInsets.fromLTRB(25, 25, 25, 25),
-                            child: widget.diaryMode == false
-                                ? FormNewTrip(
-                                    token: widget.token,
-                                    recarregar: widget.recarregar,
-                                    viagem: null,
-                                    edit: false,
-                                  )
-                                : FormNewDiary(
-                                    tripId: widget.tripId!,
-                                    token: widget.token,
-                                    recarregar: widget.recarregar,
-                                    diario: null,
-                                    edit: false)));
+                    return SingleChildScrollView(
+                      physics: const BouncingScrollPhysics(),
+                      child: widget.diaryMode == false
+                          ? FormNewTrip(
+                              token: widget.token,
+                              recarregar: widget.recarregar,
+                              viagem: null,
+                              edit: false,
+                            )
+                          : FormNewDiary(
+                              tripId: widget.tripId!,
+                              token: widget.token,
+                              recarregar: widget.recarregar,
+                              diario: null,
+                              edit: false),
+                    );
                   });
             } else if (currentIndex == 2) {
               Navigator.push(context, MaterialPageRoute(builder: (context) {

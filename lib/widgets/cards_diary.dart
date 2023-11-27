@@ -21,23 +21,26 @@ class _CardDiaryState extends State<CardDiary> {
   @override
   Widget build(BuildContext context) {
     try {
-      return InkWell(
+      return GestureDetector(
           onLongPress: () {
             setState(() {
               showModalBottomSheet(
                   context: context,
+                  isScrollControlled: true,
                   builder: (BuildContext builder) {
-                    return SizedBox(
-                        height: 450,
-                        child: Padding(
-                            padding: const EdgeInsets.fromLTRB(25, 25, 25, 25),
-                            child: FormNewDiary(
-                              tripId: widget.diary.tripId,
-                              token: widget.token,
-                              recarregar: widget.recarregar,
-                              edit: true,
-                              diario: widget.diary,
-                            )));
+                    return SingleChildScrollView(
+                      physics: const BouncingScrollPhysics(),
+                      child: Padding(
+                          padding: EdgeInsets.only(
+                              bottom: MediaQuery.of(context).viewInsets.bottom),
+                          child: FormNewDiary(
+                            tripId: widget.diary.tripId,
+                            token: widget.token,
+                            recarregar: widget.recarregar,
+                            edit: true,
+                            diario: widget.diary,
+                          )),
+                    );
                   });
             });
           },

@@ -44,75 +44,79 @@ class _FormTokenState extends State<FormToken> {
 
   @override
   Widget build(BuildContext context) {
-    return Material(
-      child: Form(
-        key: _formKey,
-        child: Column(
-          children: [
-            TextFormField(
-              controller: _textCode,
-              style: const TextStyle(fontSize: 22),
-              decoration: InputDecoration(
-                  border: const OutlineInputBorder(),
-                  labelText: "Insira o codigo",
-                  prefixIcon: const Icon(Icons.key),
-                  prefixIconColor: prefixIconColor),
-              keyboardType: TextInputType.number,
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return "Digite o codigo!";
-                }
-                return null;
-              },
-            ),
-            const SizedBox(height: 30),
-            ElevatedButton(
-              onPressed: () async {
-                if (_formKey.currentState!.validate()) {
-                  final response =
-                      await verifyToken(widget.email, _textCode.text);
-                  if (response != null && response == true) {
-                    setState(() {
-                      error = true;
-                      ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text("Bem vindo!")));
-                      prefixIconColor = Colors.blue;
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) {
-                        return widget.tela;
-                      }));
-                    });
+    try {
+      return Material(
+        child: Form(
+          key: _formKey,
+          child: Column(
+            children: [
+              TextFormField(
+                controller: _textCode,
+                style: const TextStyle(fontSize: 22),
+                decoration: InputDecoration(
+                    border: const OutlineInputBorder(),
+                    labelText: "Insira o codigo",
+                    prefixIcon: const Icon(Icons.key),
+                    prefixIconColor: prefixIconColor),
+                keyboardType: TextInputType.number,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return "Digite o codigo!";
+                  }
+                  return null;
+                },
+              ),
+              const SizedBox(height: 30),
+              ElevatedButton(
+                onPressed: () async {
+                  if (_formKey.currentState!.validate()) {
+                    final response =
+                        await verifyToken(widget.email, _textCode.text);
+                    if (response != null && response == true) {
+                      setState(() {
+                        error = true;
+                        ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text("Bem vindo!")));
+                        prefixIconColor = Colors.blue;
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (context) {
+                          return widget.tela;
+                        }));
+                      });
+                    } else {
+                      //throw Exception("Error verify token");
+                      setState(() {
+                        error = false;
+                      });
+                    }
                   } else {
-                    //throw Exception("Error verify token");
                     setState(() {
-                      error = false;
+                      prefixIconColor = Colors.red;
                     });
                   }
-                } else {
-                  setState(() {
-                    prefixIconColor = Colors.red;
-                  });
-                }
-              },
-              style: ElevatedButton.styleFrom(
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 10, horizontal: 30)),
-              child: const Text(
-                'Validar',
-                style: TextStyle(fontSize: 22),
-              ),
-            ),
-            Visibility(
-                visible: error,
+                },
+                style: ElevatedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 10, horizontal: 30)),
                 child: const Text(
-                  "Ops, ocorreu um erro ao verificar seu codigo",
-                  style: TextStyle(
-                    fontSize: 20,
-                  ),
-                )),
-          ],
+                  'Validar',
+                  style: TextStyle(fontSize: 22),
+                ),
+              ),
+              Visibility(
+                  visible: error,
+                  child: const Text(
+                    "Ops, ocorreu um erro ao verificar seu codigo",
+                    style: TextStyle(
+                      fontSize: 20,
+                    ),
+                  )),
+            ],
+          ),
         ),
-      ),
-    );
+      );
+    } catch (e) {
+      return Text("Erro to handle widget: $e");
+    }
   }
 }

@@ -47,7 +47,6 @@ class _RegistrationPageState extends State<RegistrationPage> {
   @override
   Widget build(BuildContext context) {
     try {
-      // LocalStorage("odysseia").clear();
       return Scaffold(
         body: Center(
           child: Padding(

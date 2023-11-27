@@ -51,147 +51,153 @@ class _FormNewDiaryState extends State<FormNewDiary> {
   @override
   Widget build(BuildContext context) {
     try {
-      return SingleChildScrollView(
-          child: Form(
-              key: _formKey,
-              child: Column(
-                children: [
-                  TextFormField(
-                    minLines: 1,
-                    maxLines: 5,
-                    controller: _textDescription,
-                    style: const TextStyle(fontSize: 22),
-                    decoration: InputDecoration(
-                        border: const OutlineInputBorder(),
-                        labelText: "Digite a descricao",
-                        prefixIcon: const Icon(Icons.book),
-                        prefixIconColor: prefixIconColor),
-                    keyboardType: TextInputType.emailAddress,
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        setState(() {
-                          prefixIconColor = Colors.red;
-                        });
-                        return "Digite a descricao";
-                      }
-                      if (prefixIconColor == Colors.red) {
-                        setState(() {
-                          prefixIconColor = Colors.blue;
-                        });
-                      }
-                      return null;
-                    },
-                  ),
-                  const SizedBox(height: 20),
-                  TextFormField(
-                    controller: _textLocation,
-                    style: const TextStyle(fontSize: 22),
-                    decoration: InputDecoration(
-                        border: const OutlineInputBorder(),
-                        labelText: "Escreva a localizacao",
-                        prefixIcon: const Icon(Icons.man_outlined),
-                        prefixIconColor: prefixIconColor),
-                    keyboardType: TextInputType.emailAddress,
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        setState(() {
-                          prefixIconColor = Colors.red;
-                        });
-                        return "Escreva a localizacao";
-                      }
-                      if (prefixIconColor == Colors.red) {
-                        setState(() {
-                          prefixIconColor = Colors.blue;
-                        });
-                      }
-                      return null;
-                    },
-                  ),
-                  const SizedBox(height: 20),
-                  TextFormField(
-                      controller: _textDate,
-                      keyboardType: TextInputType.none,
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          setState(() {
-                            prefixIconColor = Colors.red;
-                          });
-                          return "Escolha uma data";
-                        }
-
-                        if (prefixIconColor == Colors.red) {
-                          setState(() {
-                            prefixIconColor = Colors.blue;
-                          });
-                        }
-                        return null;
-                      },
-                      style: const TextStyle(fontSize: 22),
-                      decoration: InputDecoration(
-                          border: const OutlineInputBorder(),
-                          labelText: 'Data',
-                          focusColor: Colors.blue,
-                          prefixIconColor: prefixIconColor,
-                          prefixIcon: IconButton(
-                            icon: const Icon(Icons.calendar_today),
-                            onPressed: () async {
-                              await _selectDate();
-                            },
-                          )),
-                      onTap: () async {
-                        await _selectDate();
-                      },
-                      inputFormatters: [
-                        LengthLimitingTextInputFormatter(10),
-                      ]),
-                  const SizedBox(height: 20),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
+      return Container(
+          padding: const EdgeInsets.all(18),
+          child: Padding(
+              padding: EdgeInsets.only(
+                  bottom: MediaQuery.of(context).viewInsets.bottom),
+              child: Form(
+                  key: _formKey,
+                  child: Column(
                     children: [
-                      widget.edit == false
-                          ? ButtomNewDiary(
-                              textDate: _textDate,
-                              formKey: _formKey,
-                              textDescription: _textDescription,
-                              textLocation: _textLocation,
-                              funcao: widget.recarregar,
-                              tripId: widget.tripId!)
-                          : ButtomEditDiary(
-                              id: widget.diario!.id,
-                              tripId: widget.diario!.tripId,
-                              textDate: _textDate,
-                              formKey: _formKey,
-                              textDescription: _textDescription,
-                              textLocation: _textLocation,
-                              funcao: widget.recarregar),
-                      const SizedBox(
-                        width: 20,
+                      TextFormField(
+                        minLines: 1,
+                        maxLines: 5,
+                        controller: _textDescription,
+                        style: const TextStyle(fontSize: 22),
+                        decoration: InputDecoration(
+                            border: const OutlineInputBorder(),
+                            labelText: "Digite a descricao",
+                            prefixIcon: const Icon(Icons.book),
+                            prefixIconColor: prefixIconColor),
+                        keyboardType: TextInputType.emailAddress,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            setState(() {
+                              prefixIconColor = Colors.red;
+                            });
+                            return "Digite a descricao";
+                          }
+                          if (prefixIconColor == Colors.red) {
+                            setState(() {
+                              prefixIconColor = Colors.blue;
+                            });
+                          }
+                          return null;
+                        },
                       ),
-                      Visibility(
-                        visible: widget.edit,
-                        child: ElevatedButton(
-                          onPressed: () {},
-                          child: const Icon(
-                            Icons.delete,
-                            color: Colors.white,
-                          ),
-                          onLongPress: () async {
-                            final response = await DiarysRepository.deleteDiary(
-                                widget.diario!.id, widget.diario!.tripId);
-                            if (response) {
+                      const SizedBox(height: 20),
+                      TextFormField(
+                        controller: _textLocation,
+                        style: const TextStyle(fontSize: 22),
+                        decoration: InputDecoration(
+                            border: const OutlineInputBorder(),
+                            labelText: "Escreva a localizacao",
+                            prefixIcon: const Icon(Icons.man_outlined),
+                            prefixIconColor: prefixIconColor),
+                        keyboardType: TextInputType.emailAddress,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            setState(() {
+                              prefixIconColor = Colors.red;
+                            });
+                            return "Escreva a localizacao";
+                          }
+                          if (prefixIconColor == Colors.red) {
+                            setState(() {
+                              prefixIconColor = Colors.blue;
+                            });
+                          }
+                          return null;
+                        },
+                      ),
+                      const SizedBox(height: 20),
+                      TextFormField(
+                          controller: _textDate,
+                          keyboardType: TextInputType.none,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
                               setState(() {
-                                widget.recarregar();
+                                prefixIconColor = Colors.red;
+                              });
+                              return "Escolha uma data";
+                            }
+
+                            if (prefixIconColor == Colors.red) {
+                              setState(() {
                                 prefixIconColor = Colors.blue;
-                                Navigator.pop(context);
                               });
                             }
+                            return null;
                           },
-                        ),
-                      ),
+                          style: const TextStyle(fontSize: 22),
+                          decoration: InputDecoration(
+                              border: const OutlineInputBorder(),
+                              labelText: 'Data',
+                              focusColor: Colors.blue,
+                              prefixIconColor: prefixIconColor,
+                              prefixIcon: IconButton(
+                                icon: const Icon(Icons.calendar_today),
+                                onPressed: () async {
+                                  await _selectDate();
+                                },
+                              )),
+                          onTap: () async {
+                            await _selectDate();
+                          },
+                          inputFormatters: [
+                            LengthLimitingTextInputFormatter(10),
+                          ]),
+                      const SizedBox(height: 20),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          widget.edit == false
+                              ? ButtomNewDiary(
+                                  textDate: _textDate,
+                                  formKey: _formKey,
+                                  textDescription: _textDescription,
+                                  textLocation: _textLocation,
+                                  funcao: widget.recarregar,
+                                  tripId: widget.tripId!)
+                              : ButtomEditDiary(
+                                  id: widget.diario!.id,
+                                  tripId: widget.diario!.tripId,
+                                  textDate: _textDate,
+                                  formKey: _formKey,
+                                  textDescription: _textDescription,
+                                  textLocation: _textLocation,
+                                  funcao: widget.recarregar),
+                          const SizedBox(
+                            width: 20,
+                          ),
+                          Visibility(
+                            visible: widget.edit,
+                            child: ElevatedButton(
+                              onPressed: () {},
+                              child: const Icon(
+                                Icons.delete,
+                                color: Colors.white,
+                              ),
+                              onLongPress: () async {
+                                final response =
+                                    await DiarysRepository.deleteDiary(
+                                        widget.diario!.id,
+                                        widget.diario!.tripId);
+                                if (response) {
+                                  setState(() {
+                                    widget.recarregar();
+                                    prefixIconColor = Colors.blue;
+                                    Navigator.pop(context);
+                                  });
+                                }
+                              },
+                            ),
+                          ),
+                        ],
+                      )
                     ],
-                  )
-                ],
-              )));
+                  ))));
     } catch (e) {
       return Text("Error to handle form: $e");
     }
