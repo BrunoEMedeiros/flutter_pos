@@ -45,9 +45,9 @@ class _EditButtomState extends State<EditButtom> {
 
               final response = await ViagensRepository.editTrip(
                   widget.id,
-                  idaFormatada,
-                  voltaFormatada,
-                  widget.destino.text,
+                  idaFormatada.trim(),
+                  voltaFormatada.trim(),
+                  widget.destino.text.trim(),
                   widget.status);
               if (response) {
                 setState(() {

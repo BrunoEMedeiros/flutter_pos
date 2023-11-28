@@ -41,9 +41,9 @@ class _ButtomEditDiaryState extends State<ButtomEditDiary> {
               final response = await DiarysRepository.editDiary(
                   widget.id,
                   widget.tripId,
-                  dateFormatada,
-                  widget.textLocation.text,
-                  widget.textLocation.text);
+                  dateFormatada.trim(),
+                  widget.textLocation.text.trim(),
+                  widget.textDescription.text.trim());
               if (response) {
                 setState(() {
                   widget.funcao();

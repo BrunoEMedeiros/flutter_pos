@@ -44,7 +44,9 @@ class _ButtomFormsState extends State<ButtomForms> {
               voltaFormatada += "Z";
 
               final response = await ViagensRepository.newTrip(
-                  idaFormatada, voltaFormatada, widget.textDestino.text);
+                  idaFormatada.trim(),
+                  voltaFormatada.trim(),
+                  widget.textDestino.text.trim());
               if (response) {
                 setState(() {
                   widget.funcao();

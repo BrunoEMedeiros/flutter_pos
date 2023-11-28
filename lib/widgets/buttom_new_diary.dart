@@ -38,9 +38,9 @@ class _ButtomNewDiaryState extends State<ButtomNewDiary> {
 
               final response = await DiarysRepository.newDiaryEntry(
                   widget.tripId,
-                  dateFormatada,
-                  widget.textLocation.text,
-                  widget.textDescription.text);
+                  dateFormatada.trim(),
+                  widget.textLocation.text.trim(),
+                  widget.textDescription.text.trim());
               if (response) {
                 setState(() {
                   widget.funcao();

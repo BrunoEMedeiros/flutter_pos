@@ -34,9 +34,9 @@ class _BottomNavBarState extends State<BottomNavBar> {
           setState(() {
             currentIndex = newIndex;
             if (currentIndex == 0) {
-              Navigator.push(context, MaterialPageRoute(builder: (context) {
-                return const HomePage();
-              }));
+              if (widget.diaryMode) {
+                Navigator.pop(context);
+              }
             }
             if (currentIndex == 1) {
               showModalBottomSheet(
