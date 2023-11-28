@@ -7,11 +7,23 @@ class StatusText extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (status == 'CREATED') {
-      return const SizedBox(height: 30, child: Text('Agendada'));
+      return SizedBox(
+          height: 30,
+          child: Text('Agendada',
+              style: TextStyle(
+                  fontSize: MediaQuery.of(context).textScaleFactor * 18)));
     } else if (status == 'INPROGRESS') {
-      return const SizedBox(height: 30, child: Text('Viajando!'));
+      return SizedBox(
+          height: 30,
+          child: Text('Viajando!',
+              style: TextStyle(
+                  fontSize: MediaQuery.of(context).textScaleFactor * 18)));
     } else {
-      return const SizedBox(height: 30, child: Text('Ja fui'));
+      return SizedBox(
+          height: 30,
+          child: Text('Ja fui',
+              style: TextStyle(
+                  fontSize: MediaQuery.of(context).textScaleFactor * 18)));
     }
   }
 }

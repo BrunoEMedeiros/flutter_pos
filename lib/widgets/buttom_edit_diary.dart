@@ -52,7 +52,15 @@ class _ButtomEditDiaryState extends State<ButtomEditDiary> {
               }
             }
           },
-          child: const Icon(Icons.edit));
+          style: ElevatedButton.styleFrom(
+              minimumSize: const Size(100, 40),
+              shape: const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(50)))),
+          child: const Icon(
+            Icons.edit,
+            size: 35,
+            weight: 300,
+          ));
     } catch (e) {
       debugPrint("$e");
       throw Exception("Error to handle buttom");

@@ -44,18 +44,27 @@ class _HomePageState extends State<HomePage> {
       return Scaffold(
           body: SingleChildScrollView(
             child: Padding(
-              padding: const EdgeInsets.all(40),
+              padding: EdgeInsets.fromLTRB(
+                  MediaQuery.of(context).size.width * 0.1,
+                  MediaQuery.of(context).size.width * 0.2,
+                  MediaQuery.of(context).size.width * 0.1,
+                  MediaQuery.of(context).size.width * 0.1),
               child: Column(
                 children: [
-                  const Text(
+                  Text(
                     "Bem vindo a Odysseia",
                     textAlign: TextAlign.center,
-                    style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold),
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: MediaQuery.of(context).textScaleFactor * 40),
+                    // style: TextStyle(
+                    //     fontSize: MediaQuery.of(context).textScaleFactor * 60,
+                    //     fontWeight: FontWeight.bold),
                   ),
-                  const Text(
-                    "Suas viagens",
-                    style: TextStyle(fontSize: 20),
-                  ),
+                  Text("Suas viagens",
+                      style: TextStyle(
+                          fontSize:
+                              MediaQuery.of(context).textScaleFactor * 25)),
                   const SizedBox(
                     height: 50,
                   ),
@@ -94,9 +103,6 @@ class _HomePageState extends State<HomePage> {
           const Text("Error to handle page"),
           Text(
             "$e",
-            style: const TextStyle(
-              fontSize: 20,
-            ),
           )
         ],
       );

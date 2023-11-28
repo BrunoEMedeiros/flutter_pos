@@ -20,13 +20,19 @@ class _StatusDropDownState extends State<StatusDropDown> {
 
   @override
   Widget build(BuildContext context) {
-    return DropdownButton<String>(
+    return DropdownButtonFormField<String>(
       isDense: true,
-      padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
+      // padding: const EdgeInsets.fromLTRB(0, 2, 0, 2),
       iconSize: 30,
       itemHeight: 50,
       isExpanded: true,
       value: valueField,
+      style: TextStyle(
+          fontSize: MediaQuery.of(context).textScaleFactor * 20,
+          color: Colors.black),
+      decoration: const InputDecoration(
+          border: OutlineInputBorder(
+              borderRadius: BorderRadius.all(Radius.circular(20)))),
       onChanged: (String? value) {
         setState(() {
           widget.funcao(value);

@@ -29,19 +29,25 @@ class _DiaryHomeState extends State<DiaryHome> {
     try {
       return Scaffold(
           body: SingleChildScrollView(
-            padding: const EdgeInsets.all(40),
+            padding: EdgeInsets.fromLTRB(
+                MediaQuery.of(context).size.width * 0.1,
+                MediaQuery.of(context).size.width * 0.2,
+                MediaQuery.of(context).size.width * 0.1,
+                MediaQuery.of(context).size.width * 0.1),
             child: Center(
               child: Column(
                 children: [
                   Text(
                     widget.tripDescription,
                     textAlign: TextAlign.center,
-                    style: const TextStyle(
-                        fontSize: 40, fontWeight: FontWeight.bold),
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: MediaQuery.of(context).textScaleFactor * 40),
                   ),
-                  const Text(
+                  Text(
                     "Diario de viagem",
-                    style: TextStyle(fontSize: 20),
+                    style: TextStyle(
+                        fontSize: MediaQuery.of(context).textScaleFactor * 25),
                   ),
                   const SizedBox(
                     height: 50,

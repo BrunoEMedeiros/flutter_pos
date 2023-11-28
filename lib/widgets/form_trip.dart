@@ -71,7 +71,9 @@ class _FormNewTripState extends State<FormNewTrip> {
                         controller: _textDestino,
                         style: const TextStyle(fontSize: 22),
                         decoration: InputDecoration(
-                            border: const OutlineInputBorder(),
+                            border: const OutlineInputBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(20))),
                             labelText: "Digite o destino",
                             prefixIcon: const Icon(Icons.airplane_ticket),
                             prefixIconColor: prefixIconColor),
@@ -111,7 +113,9 @@ class _FormNewTripState extends State<FormNewTrip> {
                           },
                           style: const TextStyle(fontSize: 22),
                           decoration: InputDecoration(
-                              border: const OutlineInputBorder(),
+                              border: const OutlineInputBorder(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(20))),
                               labelText: 'Data da ida',
                               focusColor: Colors.blue,
                               prefixIconColor: prefixIconColor,
@@ -148,7 +152,9 @@ class _FormNewTripState extends State<FormNewTrip> {
                           },
                           style: const TextStyle(fontSize: 22),
                           decoration: InputDecoration(
-                              border: const OutlineInputBorder(),
+                              border: const OutlineInputBorder(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(20))),
                               labelText: 'Data da volta',
                               focusColor: Colors.blue,
                               prefixIconColor: prefixIconColor,
@@ -164,57 +170,67 @@ class _FormNewTripState extends State<FormNewTrip> {
                           inputFormatters: [
                             LengthLimitingTextInputFormatter(10),
                           ]),
-                      const SizedBox(height: 20),
+                      const SizedBox(height: 10),
                       widget.edit
                           ? StatusDropDown(
                               funcao: atualizaDropDownOption,
                               initialValue: widget.viagem!.status)
                           : Container(),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          !widget.edit
-                              ? ButtomForms(
-                                  funcao: widget.recarregar,
-                                  textDataIda: _textDataIda,
-                                  formKey: _formKey,
-                                  textDataVolta: _textDataVolta,
-                                  textDestino: _textDestino,
-                                )
-                              : EditButtom(
-                                  id: widget.viagem!.id,
-                                  formKey: _formKey,
-                                  funcao: widget.recarregar,
-                                  destino: _textDestino,
-                                  dataIda: _textDataIda,
-                                  dataVolta: _textDataVolta,
-                                  status: dropDownOption),
-                          const SizedBox(
-                            width: 20,
-                          ),
-                          Visibility(
-                            visible: widget.edit,
-                            child: ElevatedButton(
-                              onPressed: () {},
-                              child: const Icon(
-                                Icons.delete,
-                                color: Colors.white,
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      Center(
+                        child: Row(
+                          mainAxisAlignment: !widget.edit
+                              ? MainAxisAlignment.center
+                              : MainAxisAlignment.spaceEvenly,
+                          children: [
+                            !widget.edit
+                                ? ButtomForms(
+                                    funcao: widget.recarregar,
+                                    textDataIda: _textDataIda,
+                                    formKey: _formKey,
+                                    textDataVolta: _textDataVolta,
+                                    textDestino: _textDestino,
+                                  )
+                                : EditButtom(
+                                    id: widget.viagem!.id,
+                                    formKey: _formKey,
+                                    funcao: widget.recarregar,
+                                    destino: _textDestino,
+                                    dataIda: _textDataIda,
+                                    dataVolta: _textDataVolta,
+                                    status: dropDownOption),
+                            Visibility(
+                              visible: widget.edit,
+                              child: ElevatedButton(
+                                onPressed: () {},
+                                style: ElevatedButton.styleFrom(
+                                    minimumSize: const Size(100, 40),
+                                    shape: const RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(50)))),
+                                child: const Icon(
+                                  Icons.delete_rounded,
+                                  size: 35,
+                                  weight: 300,
+                                ),
+                                onLongPress: () async {
+                                  final response =
+                                      await ViagensRepository.deleteTrip(
+                                          widget.viagem!.id);
+                                  if (response) {
+                                    setState(() {
+                                      widget.recarregar();
+                                      prefixIconColor = Colors.blue;
+                                      Navigator.pop(context);
+                                    });
+                                  }
+                                },
                               ),
-                              onLongPress: () async {
-                                final response =
-                                    await ViagensRepository.deleteTrip(
-                                        widget.viagem!.id);
-                                if (response) {
-                                  setState(() {
-                                    widget.recarregar();
-                                    prefixIconColor = Colors.blue;
-                                    Navigator.pop(context);
-                                  });
-                                }
-                              },
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       )
                     ],
                   ))));

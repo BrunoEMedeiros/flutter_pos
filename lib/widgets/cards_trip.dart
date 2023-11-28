@@ -47,10 +47,14 @@ class _CardTripsState extends State<CardTrips> {
             });
           },
           child: ExpansionTile(
+            // shape: const OutlineInputBorder(
+            //     borderRadius: BorderRadius.vertical(
+            //         top: Radius.circular(10), bottom: Radius.circular(10))),
             title: Text(
               widget.viagem.destination,
               textAlign: TextAlign.center,
-              style: const TextStyle(fontSize: 20),
+              style: TextStyle(
+                  fontSize: MediaQuery.of(context).textScaleFactor * 25),
             ),
             children: [
               Row(
@@ -59,13 +63,19 @@ class _CardTripsState extends State<CardTrips> {
                   SizedBox(
                     height: 30,
                     child: Text(
-                        "Ida: ${DateFormat('dd/MM/yyyy').format(widget.viagem.startDate)}"),
+                        "Ida: ${DateFormat('dd/MM/yyyy').format(widget.viagem.startDate)}",
+                        style: TextStyle(
+                            fontSize:
+                                MediaQuery.of(context).textScaleFactor * 18)),
                   ),
                   const SizedBox(width: 30),
                   SizedBox(
                     height: 30,
                     child: Text(
-                        "Volta: ${DateFormat('dd/MM/yyyy').format(widget.viagem.endDate)}"),
+                        "Volta: ${DateFormat('dd/MM/yyyy').format(widget.viagem.endDate)}",
+                        style: TextStyle(
+                            fontSize:
+                                MediaQuery.of(context).textScaleFactor * 18)),
                   ),
                 ],
               ),
@@ -87,14 +97,18 @@ class _CardTripsState extends State<CardTrips> {
                     style: OutlinedButton.styleFrom(
                       side: BorderSide.none,
                     ),
-                    child: const Row(
+                    child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text('Diario'),
-                        SizedBox(
+                        Text('Diario',
+                            style: TextStyle(
+                                fontSize:
+                                    MediaQuery.of(context).textScaleFactor *
+                                        18)),
+                        const SizedBox(
                           width: 10,
                         ),
-                        Icon(Icons.arrow_forward),
+                        const Icon(Icons.arrow_forward),
                       ],
                     ),
                   )

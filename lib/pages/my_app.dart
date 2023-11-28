@@ -48,6 +48,11 @@ class _MyAppState extends State<MyApp> {
           theme: ThemeData(
             primaryColor: const Color.fromRGBO(0, 119, 182, 1),
             primaryColorLight: const Color.fromRGBO(144, 224, 239, 1),
+            textTheme: const TextTheme(
+                // Padrao
+                bodyMedium: TextStyle(fontSize: 16),
+                bodyLarge: TextStyle(fontSize: 24),
+                bodySmall: TextStyle(fontSize: 12)),
           ),
           darkTheme: ThemeData(
               primaryColor: const Color.fromRGBO(3, 4, 94, 1),

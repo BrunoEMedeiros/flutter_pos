@@ -66,7 +66,9 @@ class _FormNewDiaryState extends State<FormNewDiary> {
                         controller: _textDescription,
                         style: const TextStyle(fontSize: 22),
                         decoration: InputDecoration(
-                            border: const OutlineInputBorder(),
+                            border: const OutlineInputBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(20))),
                             labelText: "Digite a descricao",
                             prefixIcon: const Icon(Icons.book),
                             prefixIconColor: prefixIconColor),
@@ -91,7 +93,9 @@ class _FormNewDiaryState extends State<FormNewDiary> {
                         controller: _textLocation,
                         style: const TextStyle(fontSize: 22),
                         decoration: InputDecoration(
-                            border: const OutlineInputBorder(),
+                            border: const OutlineInputBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(20))),
                             labelText: "Escreva a localizacao",
                             prefixIcon: const Icon(Icons.man_outlined),
                             prefixIconColor: prefixIconColor),
@@ -132,7 +136,9 @@ class _FormNewDiaryState extends State<FormNewDiary> {
                           },
                           style: const TextStyle(fontSize: 22),
                           decoration: InputDecoration(
-                              border: const OutlineInputBorder(),
+                              border: const OutlineInputBorder(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(20))),
                               labelText: 'Data',
                               focusColor: Colors.blue,
                               prefixIconColor: prefixIconColor,
@@ -175,9 +181,15 @@ class _FormNewDiaryState extends State<FormNewDiary> {
                             visible: widget.edit,
                             child: ElevatedButton(
                               onPressed: () {},
+                              style: ElevatedButton.styleFrom(
+                                  minimumSize: const Size(100, 40),
+                                  shape: const RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(50)))),
                               child: const Icon(
-                                Icons.delete,
-                                color: Colors.white,
+                                Icons.delete_rounded,
+                                size: 35,
+                                weight: 300,
                               ),
                               onLongPress: () async {
                                 final response =

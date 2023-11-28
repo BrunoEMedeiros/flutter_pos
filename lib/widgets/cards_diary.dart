@@ -48,15 +48,28 @@ class _CardDiaryState extends State<CardDiary> {
             title: Text(
               DateFormat('dd/MM/yyyy').format(widget.diary.date),
               textAlign: TextAlign.center,
-              style: const TextStyle(fontSize: 20),
+              style: TextStyle(
+                  fontSize: MediaQuery.of(context).textScaleFactor * 25),
             ),
             children: [
               Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  SizedBox(height: 50, child: Text(widget.diary.description)),
+                  SizedBox(
+                      height: 50,
+                      child: Text(
+                        widget.diary.description,
+                        style: TextStyle(
+                            fontSize:
+                                MediaQuery.of(context).textScaleFactor * 18),
+                      )),
                   const SizedBox(width: 30),
-                  SizedBox(height: 50, child: Text(widget.diary.location)),
+                  SizedBox(
+                      height: 50,
+                      child: Text(widget.diary.location,
+                          style: TextStyle(
+                              fontSize: MediaQuery.of(context).textScaleFactor *
+                                  18))),
                 ],
               ),
             ],

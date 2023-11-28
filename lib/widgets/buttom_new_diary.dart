@@ -49,9 +49,14 @@ class _ButtomNewDiaryState extends State<ButtomNewDiary> {
               }
             }
           },
+          style: ElevatedButton.styleFrom(
+              minimumSize: const Size(200, 40),
+              shape: const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(50)))),
           child: const Icon(
-            Icons.save,
-            size: 20,
+            Icons.book,
+            size: 35,
+            weight: 300,
           ));
     } catch (e) {
       debugPrint("$e");
