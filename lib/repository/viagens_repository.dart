@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:projeto/model/Viagens.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:projeto/utils.dart';
 
 class ViagensRepository {
   static Future<List<Viagem>> getViagens() async {
@@ -9,13 +10,10 @@ class ViagensRepository {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final auth = await prefs.getString('token');
     final token = {'Authorization': 'Bearer $auth'};
-    final uri = Uri.parse("http://192.168.0.121:21035/trips");
+    final uri = Uri.parse("http://$host:21035/trips");
     final response = await client.get(uri, headers: Map.from(token));
 
     if (response.statusCode == 200) {
-      // final teste = Viagem.fromJson(json.decode(response.body));
-      // return Viagem.fromJson(jsonDecode(response.body) as Map<String, dynamic>);
-      //print(Viagem.fromJsonToList(jsonDecode(response.body)));
       return Viagem.fromJsonToList(jsonDecode(response.body));
     } else {
       throw Exception('Erro ao get trips');
@@ -34,7 +32,7 @@ class ViagensRepository {
         'destination': destination
       };
       final token = {'Authorization': 'Bearer $auth'};
-      final uri = Uri.parse("http://192.168.0.121:21035/trips");
+      final uri = Uri.parse("http://$host:21035/trips");
       final response = await client.post(
         uri,
         headers: Map.from(token),
@@ -65,7 +63,7 @@ class ViagensRepository {
         'status': status
       };
       final token = {'Authorization': 'Bearer $auth'};
-      final uri = Uri.parse("http://192.168.0.121:21035/trips/$id");
+      final uri = Uri.parse("http://$host:21035/trips/$id");
       final response = await client.put(
         uri,
         headers: Map.from(token),
@@ -88,7 +86,7 @@ class ViagensRepository {
       final SharedPreferences prefs = await SharedPreferences.getInstance();
       final auth = prefs.getString('token');
       final token = {'Authorization': 'Bearer $auth'};
-      final uri = Uri.parse("http://192.168.0.121:21035/trips/$id");
+      final uri = Uri.parse("http://$host:21035/trips/$id");
       final response = await client.delete(
         uri,
         headers: Map.from(token),

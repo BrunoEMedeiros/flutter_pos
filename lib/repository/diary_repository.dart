@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:projeto/model/Diario.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:projeto/utils.dart';
 
 class DiarysRepository {
   static Future<List<Diario>> getDiarys(int tripId) async {
@@ -9,7 +10,7 @@ class DiarysRepository {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final auth = prefs.getString('token');
     final token = {'Authorization': 'Bearer $auth'};
-    final uri = Uri.parse("http://192.168.0.121:21035/diary/$tripId");
+    final uri = Uri.parse("http://$host:21035/diary/$tripId");
     final response = await client.get(uri, headers: Map.from(token));
 
     if (response.statusCode == 200) {
@@ -34,7 +35,7 @@ class DiarysRepository {
         'location': location
       };
       final token = {'Authorization': 'Bearer $auth'};
-      final uri = Uri.parse("http://192.168.0.121:21035/diary/$tripId");
+      final uri = Uri.parse("http://$host:21035/diary/$tripId");
       final response = await client.post(
         uri,
         headers: Map.from(token),
@@ -63,7 +64,7 @@ class DiarysRepository {
         'location': location
       };
       final token = {'Authorization': 'Bearer $auth'};
-      final uri = Uri.parse("http://192.168.0.121:21035/diary/$tripId/$id");
+      final uri = Uri.parse("http://$host:21035/diary/$tripId/$id");
       final response = await client.put(
         uri,
         headers: Map.from(token),
@@ -86,7 +87,7 @@ class DiarysRepository {
       final SharedPreferences prefs = await SharedPreferences.getInstance();
       final auth = prefs.getString('token');
       final token = {'Authorization': 'Bearer $auth'};
-      final uri = Uri.parse("http://192.168.0.121:21035/diary/$tripId/$id");
+      final uri = Uri.parse("http://$host:21035/diary/$tripId/$id");
       final response = await client.delete(
         uri,
         headers: Map.from(token),

@@ -2,10 +2,10 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:http/http.dart' as http;
+import 'package:projeto/utils.dart';
 
 class FormEmail extends StatefulWidget {
   final Function funcao;
-
   const FormEmail({super.key, required this.funcao});
 
   @override
@@ -16,7 +16,7 @@ class _FormEmailState extends State<FormEmail> {
   Future<bool> sendEmail(String email) async {
     try {
       Map<String, dynamic> request = {'email': email};
-      final uri = Uri.parse("http://192.168.0.121:21035/auth/get-access-code");
+      final uri = Uri.parse("http://$host:21035/auth/get-access-code");
       final response = await http.post(uri, body: request);
       if (response.statusCode == 201) {
         return Future.value(true);
@@ -32,6 +32,7 @@ class _FormEmailState extends State<FormEmail> {
   final _formKey = GlobalKey<FormState>();
   final _textEmail = TextEditingController();
   Color prefixIconColor = Colors.blue;
+  bool isLoading = false;
   bool error = false;
 
   @override
@@ -61,41 +62,49 @@ class _FormEmailState extends State<FormEmail> {
                 },
               ),
               const SizedBox(height: 30),
-              ElevatedButton(
-                onPressed: () async {
-                  if (_formKey.currentState!.validate()) {
-                    final response = await sendEmail(_textEmail.text);
-                    // debugPrint(response.toString());
-                    if (response) {
-                      setState(() {
-                        error = false;
-                        ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                                content:
-                                    Text("Codigo enviado para o seu email")));
-                        prefixIconColor = Colors.blue;
-                        widget.funcao(_textEmail.text);
-                      });
-                    } else {
-                      //throw Exception("Error to send email");
-                      setState(() {
-                        error = true;
-                      });
-                    }
-                  } else {
-                    setState(() {
-                      prefixIconColor = Colors.red;
-                    });
-                  }
-                },
-                style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 10, horizontal: 30)),
-                child: const Text(
-                  'Enviar',
-                  style: TextStyle(fontSize: 22),
-                ),
-              ),
+              isLoading
+                  ? const CircularProgressIndicator()
+                  : ElevatedButton(
+                      onPressed: () async {
+                        if (_formKey.currentState!.validate()) {
+                          setState(() {
+                            isLoading = true;
+                          });
+
+                          final response = await sendEmail(_textEmail.text);
+                          // debugPrint(response.toString());
+                          if (response) {
+                            setState(() {
+                              error = false;
+                              isLoading = false;
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                      content: Text(
+                                          "Codigo enviado para o seu email")));
+                              prefixIconColor = Colors.blue;
+                              widget.funcao(_textEmail.text);
+                            });
+                          } else {
+                            //throw Exception("Error to send email");
+                            setState(() {
+                              error = true;
+                            });
+                          }
+                        } else {
+                          setState(() {
+                            prefixIconColor = Colors.red;
+                          });
+                        }
+                      },
+                      style: ElevatedButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 10, horizontal: 30)),
+                      child: const Text(
+                        'Enviar',
+                        style: TextStyle(fontSize: 22),
+                      ),
+                    ),
+              const SizedBox(height: 20),
               Visibility(
                   visible: error,
                   child: const Text(
