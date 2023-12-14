@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:projeto/repository/diary_repository.dart';
@@ -10,6 +12,8 @@ class ButtomEditDiary extends StatefulWidget {
   final TextEditingController textDescription;
   final TextEditingController textLocation;
   final Function funcao;
+  final File? imagem;
+
   const ButtomEditDiary(
       {super.key,
       required this.id,
@@ -18,7 +22,8 @@ class ButtomEditDiary extends StatefulWidget {
       required this.formKey,
       required this.textDescription,
       required this.textLocation,
-      required this.funcao});
+      required this.funcao,
+      this.imagem});
 
   @override
   State<ButtomEditDiary> createState() => _ButtomEditDiaryState();
@@ -45,10 +50,22 @@ class _ButtomEditDiaryState extends State<ButtomEditDiary> {
                   widget.textLocation.text.trim(),
                   widget.textDescription.text.trim());
               if (response) {
-                setState(() {
-                  widget.funcao();
-                  Navigator.pop(context);
-                });
+                if (widget.imagem != null) {
+                  debugPrint("Entrando para cad imagem!");
+                  final resImg = await DiarysRepository.newImageDiary(
+                      widget.tripId, widget.id, widget.imagem!);
+                  if (resImg) {
+                    setState(() {
+                      widget.funcao();
+                      Navigator.pop(context);
+                    });
+                  }
+                } else {
+                  setState(() {
+                    widget.funcao();
+                    Navigator.pop(context);
+                  });
+                }
               }
             }
           },

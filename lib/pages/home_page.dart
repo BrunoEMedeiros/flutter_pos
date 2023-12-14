@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:projeto/repository/verify_respositoru.dart';
-import 'package:projeto/repository/viagens_repository.dart';
 import 'package:projeto/widgets/bottom_nav_bar.dart';
 import 'package:projeto/widgets/cards_trip.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});

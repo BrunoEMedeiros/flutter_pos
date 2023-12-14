@@ -1,5 +1,8 @@
 import 'dart:convert';
+import 'dart:io';
+import 'package:dio/dio.dart';
 import 'package:http/http.dart' as http;
+import 'package:http_parser/http_parser.dart';
 import 'package:projeto/model/Diario.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:projeto/utils.dart';
@@ -20,6 +23,50 @@ class DiarysRepository {
       return Diario.fromJsonToList(jsonDecode(response.body));
     } else {
       throw Exception('Error to get diarys');
+    }
+  }
+
+  static Future<bool> newImageDiary(
+      int tripId, int diaryId, File imagem) async {
+    try {
+      BaseOptions baseOptions = BaseOptions(
+        baseUrl: "http://$host:21035",
+        receiveDataWhenStatusError: true,
+        connectTimeout: const Duration(minutes: 1),
+        receiveTimeout: const Duration(minutes: 1),
+      );
+
+      Dio dio = Dio(baseOptions);
+
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
+      final auth = prefs.getString('token');
+
+      String fileName = imagem.path.split('/').last;
+      String fileExt = fileName.split('.').last;
+      String newFileName =
+          fileName.substring(0, fileName.length - fileExt.length - 1);
+
+      // Authorization header
+      dio.options.headers.addAll({'Authorization': 'Bearer $auth'});
+      Map<String, dynamic> formDataFields = {
+        'file': await MultipartFile.fromFile(imagem.path,
+            filename: "$newFileName.$fileExt",
+            contentType: MediaType('image', 'jpg'))
+      };
+      final formData = FormData.fromMap(formDataFields);
+
+      final response =
+          await dio.patch("/diary/$tripId/$diaryId", data: formData);
+
+      if (response.statusCode == 200) {
+        return Future.value(true);
+      } else {
+        return Future.value(false);
+      }
+    } catch (e) {
+      // Handle errors
+      print(e);
+      return Future.value(false);
     }
   }
 

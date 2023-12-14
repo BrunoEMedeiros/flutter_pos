@@ -9,6 +9,7 @@ class Diario {
   final DateTime updatedAt;
   final DateTime deletedAt;
   final int tripId;
+  final String? imgUrl;
 
   Diario(
       {required this.id,
@@ -18,7 +19,8 @@ class Diario {
       required this.createdAt,
       required this.updatedAt,
       required this.deletedAt,
-      required this.tripId});
+      required this.tripId,
+      required this.imgUrl});
 
   factory Diario.fromJson(Map<String, dynamic> json) {
     return Diario(
@@ -29,7 +31,8 @@ class Diario {
         createdAt: DateTime.parse(json['createdAt']),
         updatedAt: DateTime.parse(json['updatedAt']),
         deletedAt: DateTime.now(),
-        tripId: json['tripId'] as int);
+        tripId: json['tripId'] as int,
+        imgUrl: json['imgUrl'] as String?);
   }
 
   static List<Diario> fromJsonToList(Iterable list) {

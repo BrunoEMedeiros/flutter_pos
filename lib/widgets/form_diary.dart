@@ -1,5 +1,8 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:projeto/model/Diario.dart';
 import 'package:projeto/repository/diary_repository.dart';
@@ -12,6 +15,7 @@ class FormNewDiary extends StatefulWidget {
   final Function recarregar;
   final bool edit;
   final Diario? diario;
+
   const FormNewDiary(
       {super.key,
       required this.token,
@@ -30,6 +34,7 @@ class _FormNewDiaryState extends State<FormNewDiary> {
   late TextEditingController _textDescription;
   late TextEditingController _textLocation;
   Color prefixIconColor = Colors.blue;
+  File? imagemSelecionada;
 
   @override
   void initState() {
@@ -59,6 +64,7 @@ class _FormNewDiaryState extends State<FormNewDiary> {
               child: Form(
                   key: _formKey,
                   child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       TextFormField(
                         minLines: 1,
@@ -155,6 +161,20 @@ class _FormNewDiaryState extends State<FormNewDiary> {
                             LengthLimitingTextInputFormatter(10),
                           ]),
                       const SizedBox(height: 20),
+                      Visibility(
+                          visible: widget.edit,
+                          child: imagemSelecionada != null
+                              ? Image.file(
+                                  imagemSelecionada!,
+                                  width: 300,
+                                  height: 100,
+                                )
+                              : ElevatedButton(
+                                  onPressed: () {
+                                    imagePicker();
+                                  },
+                                  child: const Text("Escolha uma foto"))),
+                      const SizedBox(height: 20),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
@@ -173,7 +193,9 @@ class _FormNewDiaryState extends State<FormNewDiary> {
                                   formKey: _formKey,
                                   textDescription: _textDescription,
                                   textLocation: _textLocation,
-                                  funcao: widget.recarregar),
+                                  funcao: widget.recarregar,
+                                  imagem: imagemSelecionada,
+                                ),
                           const SizedBox(
                             width: 20,
                           ),
@@ -234,5 +256,14 @@ class _FormNewDiaryState extends State<FormNewDiary> {
       debugPrint("$e");
       throw Exception("Error to pick a date");
     }
+  }
+
+  Future imagePicker() async {
+    final imagem = await ImagePicker().pickImage(source: ImageSource.gallery);
+
+    if (imagem == null) return;
+    setState(() {
+      imagemSelecionada = File(imagem.path);
+    });
   }
 }

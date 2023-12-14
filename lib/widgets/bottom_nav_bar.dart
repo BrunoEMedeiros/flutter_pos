@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:projeto/pages/home_page.dart';
 import 'package:projeto/pages/registry_page.dart';
 import 'package:projeto/widgets/form_diary.dart';
 import 'package:projeto/widgets/form_trip.dart';

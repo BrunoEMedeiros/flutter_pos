@@ -53,23 +53,27 @@ class _CardDiaryState extends State<CardDiary> {
             ),
             children: [
               Column(
-                mainAxisAlignment: MainAxisAlignment.center,
+                // mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   SizedBox(
-                      height: 50,
                       child: Text(
-                        widget.diary.description,
-                        style: TextStyle(
-                            fontSize:
-                                MediaQuery.of(context).textScaleFactor * 18),
-                      )),
-                  const SizedBox(width: 30),
+                    widget.diary.description,
+                    style: TextStyle(
+                        fontSize: MediaQuery.of(context).textScaleFactor * 18),
+                  )),
                   SizedBox(
-                      height: 50,
                       child: Text(widget.diary.location,
                           style: TextStyle(
                               fontSize: MediaQuery.of(context).textScaleFactor *
                                   18))),
+                  widget.diary.imgUrl != null
+                      ? Image.network(
+                          widget.diary.imgUrl!,
+                          width: 200,
+                          height: 200,
+                        )
+                      : const SizedBox(width: 30),
+                  const SizedBox(width: 50)
                 ],
               ),
             ],

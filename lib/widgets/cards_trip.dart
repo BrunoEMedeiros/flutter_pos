@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:projeto/model/Viagens.dart';
 import 'package:projeto/pages/diary_page.dart';
 import 'package:projeto/repository/viagens_repository.dart';
 import 'package:projeto/widgets/form_trip.dart';
